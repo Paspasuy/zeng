@@ -3,6 +3,8 @@ import glob
 import os
 
 path = os.path.expanduser('~/.zeng/')
+colors = {'zero' : '\033[0m', 'green' : '\x1B[32m', 'red' : '\x1B[31m', 
+          'purple' : '\x1B[35m'}
 
 def print_help():
     print("""\
@@ -17,6 +19,7 @@ Options:
     -a [WL]: append card to wordlist (first line is treated as word, other lines — explanation and examples)
     -n <N>: takes in training pool last <N> words from wordlist
     -h: print help
+    -q <word> [WL]: search for a definition of the <word>
 """ % sys.argv[0])
 #    -r: shuffle words from training pool
     sys.exit(0)

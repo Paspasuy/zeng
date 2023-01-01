@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from Util import path
+from Util import path, colors
 import Util
 
 def create_wordlist(name):
@@ -18,7 +18,6 @@ def load_wordlist(name):
     if name == '':
         raise Exception('No filename provided')
     name = Util.make_filename(name)
-    print(name)
     if not os.path.exists(name):
         raise Exception('No such wordlist')
     with open(name, 'r') as file:
@@ -49,6 +48,7 @@ def load_wordlist(name):
 
 def append_to_wordlist(name):
     name = Util.make_filename(name)
+    print('Appending to wordlist:', name)
     with open(name, 'a') as f:
         f.write('\n')
         for line in sys.stdin:
@@ -60,3 +60,12 @@ def crop_wordlist(wordlist, crop):
     if crop == None or len(wordlist) <= crop:
         return wordlist
     return wordlist[-crop:]
+
+def grep(wordlist, word):
+    ans = []
+    for card in wordlist:
+        if word in card[0]:
+            ans.append(colors['red'] + card[0] + colors['zero'] + '\n' +
+                       colors['purple'] + card[1] + colors['zero'])
+    return ans
+
