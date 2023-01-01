@@ -46,6 +46,10 @@ def load_wordlist(name):
             res.append((cur_word, cur_desc))
         return res
 
+def print_wordlist(name):
+    wordlist = load_wordlist(name)
+    Util.print_col('yellow', 'Wordlist: %s; contains %d words.' % (name, len(wordlist)))
+
 def append_to_wordlist(name):
     name = Util.make_filename(name)
     print('Appending to wordlist:', name)

@@ -22,16 +22,18 @@ def train(wordlist):
             print_score(score, train_len)
             sys.exit(0)
         if word == card[0].strip().lower():
-            print(colors['green'] + 'Correct!' + colors['zero'])
+            Util.print_col('green', 'Correct!')
             score += 1
         else:
-            print(colors['red'] + 'Wrong.' + colors['zero'])
-            print(colors['purple'] + 'Right answer was: ' + card[0] + colors['zero'])
+            Util.print_col('red', 'Wrong.')
+            Util.print_col('purple', 'Right answer was: ' + card[0])
             wordlist.insert(randint(0, len(wordlist)), card)
             score -= 1
     print_score(score, train_len)
 
-flags = ['-c', '-l', '-a', '-n', '-h', '-q']
+flags = ['-c', '-l', '-a', '--head', '--tail', '-h', '--help', '-q']
+
+#TODO implement --head
 
 def get_wl_name(pos):
     if pos + 1 >= len(sys.argv):
@@ -47,24 +49,24 @@ def parse_command_line():
     crop = None
     while pos < len(sys.argv):
         if sys.argv[pos] in flags:
-            if sys.argv[pos] == flags[0]:
+            if sys.argv[pos] == '-c':
                 wordlist.create_wordlist(get_wl_name(pos))
                 pos += 2
-            elif sys.argv[pos] == flags[1]:
+            elif sys.argv[pos] == '-l':
                 should_train = False
-                print(wordlist.load_wordlist(get_wl_name(pos)))
+                wordlist.print_wordlist(get_wl_name(pos))
                 pos += 2
-            elif sys.argv[pos] == flags[2]:
+            elif sys.argv[pos] == '-a':
                 wordlist.append_to_wordlist(get_wl_name(pos))
                 pos += 2
-            elif sys.argv[pos] == flags[3]:
+            elif sys.argv[pos] == '--tail':
                 if not sys.argv[pos + 1].isdigit():
                     Util.print_help()
                 crop = int(sys.argv[pos + 1])
                 pos += 2
-            elif sys.argv[pos] == flags[4]:
+            elif sys.argv[pos] == '-h' or sys.argv[pos] == '--help':
                 Util.print_help()
-            elif sys.argv[pos] == flags[5]:
+            elif sys.argv[pos] == '-q':
                 should_train = False
                 if pos + 2 >= len(sys.argv):
                     Util.print_help()
