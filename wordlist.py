@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 from Util import path, colors
 import Util
+from fetch_def import fetch_def
 
 def create_wordlist(name):
     name += '.wordlist'
@@ -13,6 +14,7 @@ def create_wordlist(name):
     Path(path + name).touch()
     print("Created:", path + name)
     sys.exit(0)
+
 
 def load_wordlist(name):
     if name == '':
@@ -46,15 +48,22 @@ def load_wordlist(name):
             res.append((cur_word, cur_desc))
         return res
 
+
 def print_wordlist(name):
     wordlist = load_wordlist(name)
     Util.print_col('yellow', 'Wordlist: %s; contains %d words.' % (name, len(wordlist)))
 
+
 def append_to_wordlist(name):
     name = Util.make_filename(name)
-    print('Appending to wordlist:', name)
+    Util.print_col('cyan', f'Appending to wordlist {name}:')
     with open(name, 'a') as f:
         f.write('\n')
+        word = input()
+        Util.print_col('yellow', 'Searching for definition...')
+        defs, syns = fetch_def(word)
+        print(f'{colors["gray2"]}Definitions:{colors["cyan2"]} {" | ".join(defs)}{colors["zero"]}')
+        print(f'{colors["gray2"]}Synonyms:{colors["purple2"]} {" | ".join(syns)}{colors["zero"]}')
         for line in sys.stdin:
             f.write(line)
     sys.exit(0)
@@ -64,6 +73,7 @@ def crop_wordlist(wordlist, crop):
     if crop == None or len(wordlist) <= crop:
         return wordlist
     return wordlist[-crop:]
+
 
 def grep(wordlist, word):
     ans = []

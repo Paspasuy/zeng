@@ -4,7 +4,8 @@ import os
 
 path = os.path.expanduser('~/.zeng/')
 colors = {'zero': '\033[0m', 'green': '\x1B[32m', 'red': '\x1B[31m', 
-          'purple': '\x1B[35m', 'yellow': '\x1B[33m', 'cyan': '\x1B[36m'}
+          'purple': '\x1B[35m', 'yellow': '\x1B[33m', 'cyan': '\x1B[36m',
+          'cyan2': '\x1B[96m', 'purple2': '\x1B[95m', 'gray2': '\x1B[90m'}
 
 
 def print_help():
@@ -14,14 +15,17 @@ Usage:
 
 If wordlist is required for the option, but not provided, then the most recent .wordlist file from ~/.zeng is used (works only for the last argument).
 
+Commands:
+    create [WL]: create empty wordlist
+    print [WL]: print wordlist
+    append [WL]: append card to wordlist (first line is treated as word, other lines — explanation and examples)
+    search <word> [WL]: search for a definition of the <word>
+    lists: print all wordlists
+    help: print help
+
 Options:
-    -c [WL]: create empty wordlist
-    -l [WL]: print wordlist
-    -a [WL]: append card to wordlist (first line is treated as word, other lines — explanation and examples)
     --tail <N>: adds last <N> words from wordlist to training pool
-    --head <N>: adds first <N> words from wordlist to training pool
-    -q <word> [WL]: search for a definition of the <word>
-    -h: print help
+    --head <N>: adds first <N> words from wordlist to training pool (not implemented yet)
 """ % sys.argv[0])
 #    -r: shuffle words from training pool
     sys.exit(0)
