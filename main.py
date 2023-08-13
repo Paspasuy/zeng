@@ -5,8 +5,10 @@ import wordlist
 from random import randint, shuffle
 from Util import colors
 
+
 def print_score(score, train_len):
-    print('** You scored %d/%d. **' % (score, train_len))
+    Util.print_col('cyan', '** You scored %d/%d. **' % (score, train_len))
+
 
 def train(wordlist):
     shuffle(wordlist)
@@ -31,51 +33,54 @@ def train(wordlist):
             score -= 1
     print_score(score, train_len)
 
-flags = ['-c', '-l', '-a', '--head', '--tail', '-h', '--help', '-q']
+flags = ['--head', '--tail']
+actions = ['create', 'print', 'append', 'search', 'lists', 'help']
 
 #TODO implement --head
 
-def get_wl_name(pos):
-    if pos + 1 >= len(sys.argv):
+
+def get_wl_name(pos, new_allowed=False):
+    wordlists = Util.get_wordlist_names()
+    if not new_allowed and pos + 1 >= len(sys.argv):
         return Util.get_latest_wordlist()
-    if sys.argv[pos + 1] in flags:
+    if (sys.argv[pos + 1] not in wordlists and not new_allowed) or (new_allowed and pos + 1 >= len(sys.argv)):
+        if new_allowed:
+            Util.print_col('red', 'Please provide name for wordlist')
+        else:
+            Util.print_col('red', 'Such wordlist does not exist')
         Util.print_help()
+        sys.exit(0)
     return sys.argv[pos + 1]
 
+
 def parse_command_line():
-    should_train = True
-    pos = 1
     wl_name = Util.get_latest_wordlist()
     crop = None
-    while pos < len(sys.argv):
-        if sys.argv[pos] in flags:
-            if sys.argv[pos] == '-c':
-                wordlist.create_wordlist(get_wl_name(pos))
-                pos += 2
-            elif sys.argv[pos] == '-l':
-                should_train = False
-                wordlist.print_wordlist(get_wl_name(pos))
-                pos += 2
-            elif sys.argv[pos] == '-a':
-                wordlist.append_to_wordlist(get_wl_name(pos))
-                pos += 2
-            elif sys.argv[pos] == '--tail':
-                if not sys.argv[pos + 1].isdigit():
-                    Util.print_help()
-                crop = int(sys.argv[pos + 1])
-                pos += 2
-            elif sys.argv[pos] == '-h' or sys.argv[pos] == '--help':
+    wl_pos = 0
+    if '--tail' in sys.argv:
+        pos = sys.argv.index('--tail')
+        if not sys.argv[pos + 1].isdigit():
+            Util.print_help()
+        crop = int(sys.argv[pos + 1])
+        wl_pos = max(wl_pos, pos + 1)
+    if len(sys.argv) > 1 and sys.argv[1] in actions:
+        if sys.argv[1] == 'create':
+            wordlist.create_wordlist(get_wl_name(1, True))
+        elif sys.argv[1] == 'print':
+            wordlist.print_wordlist(get_wl_name(1))
+        elif sys.argv[1] == 'append':
+            wordlist.append_to_wordlist(get_wl_name(1))
+        elif sys.argv[1] == 'help':
+            Util.print_help()
+        elif sys.argv[1] == 'lists':
+            for name in Util.get_wordlist_names():
+                wordlist.print_wordlist(name)
+        elif sys.argv[1] == 'search':
+            if 3 >= len(sys.argv):
                 Util.print_help()
-            elif sys.argv[pos] == '-q':
-                should_train = False
-                if pos + 2 >= len(sys.argv):
-                    Util.print_help()
-                print(*wordlist.grep(wordlist.load_wordlist(get_wl_name(pos + 1)), sys.argv[pos + 1]), sep='\n\n')
-                pos += 3
-        else:
-            wl_name = sys.argv[pos]
-            break
-    if should_train:
+            print(*wordlist.grep(wordlist.load_wordlist(get_wl_name(2)), sys.argv[2]), sep='\n\n')
+    else:
+        wl_name = get_wl_name(wl_pos)
         train(wordlist.crop_wordlist(wordlist.load_wordlist(wl_name), crop))
 
 parse_command_line()
