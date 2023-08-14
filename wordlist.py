@@ -58,12 +58,12 @@ def append_to_wordlist(name):
     name = Util.make_filename(name)
     Util.print_col('cyan', f'Appending to wordlist {name}:')
     with open(name, 'a') as f:
-        f.write('\n')
         word = input()
         Util.print_col('yellow', 'Searching for definition...')
         defs, syns = fetch_def(word)
         print(f'{colors["gray2"]}Definitions:{colors["cyan2"]} {" | ".join(defs)}{colors["zero"]}')
         print(f'{colors["gray2"]}Synonyms:{colors["purple2"]} {" | ".join(syns)}{colors["zero"]}')
+        f.write('\n' + word + '\n')
         for line in sys.stdin:
             f.write(line)
     sys.exit(0)
