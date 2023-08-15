@@ -5,7 +5,7 @@ def fetch_def(word):
     resp = requests.get(f'https://api.dictionaryapi.dev/api/v2/entries/en/{word}')
     if resp.status_code != 200:
         print_col('red', 'Failed to fetch definition from internet')
-        return []
+        return [], []
     definitions = []
     synonyms = []
     js = resp.json()
