@@ -6,13 +6,16 @@ from random import randint, shuffle
 from Util import colors
 
 
-def print_score(score, train_len):
-    Util.print_col('cyan', '** You scored %d/%d. **' % (score, train_len))
+def print_score(ok, wrong, total):
+    print(f'{colors["cyan"]}** You scored {colors["green"]}{ok}{colors["cyan"]} correct / \
+{colors["red"]}{wrong}{colors["cyan"]} \
+incorrect of total {colors["gray2"]}{total}{colors["cyan"]} words. **')
 
 
 def train(wordlist):
     shuffle(wordlist)
-    score = 0
+    correct = 0
+    mistakes = 0
     train_len = len(wordlist)
 
     while len(wordlist):
@@ -25,15 +28,16 @@ def train(wordlist):
             sys.exit(0)
         if word == card[0].strip().lower():
             Util.print_col('green', 'Correct!')
-            score += 1
+            correct += 1
         else:
             Util.print_col('red', 'Wrong.')
             Util.print_col('purple', 'Right answer was: ' + card[0])
             wordlist.insert(randint(0, len(wordlist)), card)
-            score -= 1
-    print_score(score, train_len)
+            mistakes -= 1
+    print_score(correct, mistakes, train_len)
 
-flags = ['--head', '--tail']
+
+flags = ['--head', '--tail', '--range']
 actions = ['create', 'print', 'append', 'search', 'lists', 'help']
 
 #TODO implement --head
@@ -55,14 +59,28 @@ def get_wl_name(pos, new_allowed=False):
 
 def parse_command_line():
     wl_name = Util.get_latest_wordlist()
-    crop = None
+    tail = None
+    head = None
+    rng = None
     wl_pos = 0
+
     if '--tail' in sys.argv:
         pos = sys.argv.index('--tail')
         if not sys.argv[pos + 1].isdigit():
             Util.print_help()
-        crop = int(sys.argv[pos + 1])
+        tail = int(sys.argv[pos + 1])
         wl_pos = max(wl_pos, pos + 1)
+    if '--head' in sys.argv:
+        pos = sys.argv.index('--head')
+        if not sys.argv[pos + 1].isdigit():
+            Util.print_help()
+        head = int(sys.argv[pos + 1])
+        wl_pos = max(wl_pos, pos + 1)
+    if '--range' in sys.argv:
+        pos = sys.argv.index('--range')
+        rng = list(map(int, sys.argv[pos + 1].split('-')))
+        wl_pos = max(wl_pos, pos + 1)
+
     if len(sys.argv) > 1 and sys.argv[1] in actions:
         if sys.argv[1] == 'create':
             wordlist.create_wordlist(get_wl_name(1, True))
@@ -81,6 +99,6 @@ def parse_command_line():
             print(*wordlist.grep(wordlist.load_wordlist(get_wl_name(2)), sys.argv[2]), sep='\n\n')
     else:
         wl_name = get_wl_name(wl_pos)
-        train(wordlist.crop_wordlist(wordlist.load_wordlist(wl_name), crop))
+        train(wordlist.crop_wordlist(wordlist.load_wordlist(wl_name), head, tail, rng))
 
 parse_command_line()

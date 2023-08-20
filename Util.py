@@ -11,7 +11,9 @@ colors = {'zero': '\033[0m', 'green': '\x1B[32m', 'red': '\x1B[31m',
 def print_help():
     print("""\
 Usage:
-    %s [OPTION] [WORDLIST_NAME]
+    %s [TRAINING_OPTION] [WORDLIST_NAME]
+OR
+    %s [COMMAND] [WORDLIST_NAME]
 
 If wordlist is required for the option, but not provided, then the most recent .wordlist file from ~/.zeng is used (works only for the last argument).
 
@@ -19,13 +21,14 @@ Commands:
     create [WL]: create empty wordlist
     print [WL]: print wordlist
     append [WL]: append card to wordlist (first line is treated as word, other lines — explanation and examples)
-    search <word> [WL]: search for a definition of the <word>
+    search <WORD> [WL]: search for a definition of the <word>
     lists: print all wordlists
     help: print help
 
-Options:
-    --tail <N>: adds last <N> words from wordlist to training pool
-    --head <N>: adds first <N> words from wordlist to training pool (not implemented yet)
+Training options:
+    --tail <N>: adds last <N> words from wordlist to training set 
+    --head <N>: adds first <N> words from wordlist to training set
+    --range <X-Y>: adds words from X to Y to training set
 """ % sys.argv[0])
 #    -r: shuffle words from training pool
     sys.exit(0)

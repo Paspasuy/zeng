@@ -69,10 +69,14 @@ def append_to_wordlist(name):
     sys.exit(0)
 
 
-def crop_wordlist(wordlist, crop):
-    if crop == None or len(wordlist) <= crop:
-        return wordlist
-    return wordlist[-crop:]
+def crop_wordlist(wordlist, head, tail, rng):
+    if head is not None:
+        return wordlist[:head]
+    if tail is not None:
+        return wordlist[-tail:]
+    if rng is not None:
+        return wordlist[rng[0]: rng[1] + 1]
+    return wordlist
 
 
 def grep(wordlist, word):
