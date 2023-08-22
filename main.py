@@ -33,14 +33,12 @@ def train(wordlist):
             Util.print_col('red', 'Wrong.')
             Util.print_col('purple', 'Right answer was: ' + card[0])
             wordlist.insert(randint(0, len(wordlist)), card)
-            mistakes -= 1
+            mistakes += 1
     print_score(correct, mistakes, train_len)
 
 
 flags = ['--head', '--tail', '--range']
 actions = ['create', 'print', 'append', 'search', 'lists', 'help']
-
-#TODO implement --head
 
 
 def get_wl_name(pos, new_allowed=False):
@@ -79,6 +77,8 @@ def parse_command_line():
     if '--range' in sys.argv:
         pos = sys.argv.index('--range')
         rng = list(map(int, sys.argv[pos + 1].split('-')))
+        rng[0] -= 1
+        rng[1] -= 1
         wl_pos = max(wl_pos, pos + 1)
 
     if len(sys.argv) > 1 and sys.argv[1] in actions:
