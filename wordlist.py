@@ -57,14 +57,20 @@ def print_wordlist(name):
 def append_to_wordlist(name):
     name = Util.make_filename(name)
     Util.print_col('cyan', f'Appending to wordlist {name}:')
+
+    word = input()
+    Util.print_col('yellow', 'Searching for definition...')
+    defs, syns = fetch_def(word)
+    print(f'{colors["gray2"]}Definitions:{colors["cyan2"]} {" | ".join(defs)}{colors["zero"]}')
+    print(f'{colors["gray2"]}Synonyms:{colors["purple2"]} {" | ".join(syns)}{colors["zero"]}')
+
+    all_lines = [line for line in sys.stdin]
+
     with open(name, 'a') as f:
-        word = input()
-        Util.print_col('yellow', 'Searching for definition...')
-        defs, syns = fetch_def(word)
-        print(f'{colors["gray2"]}Definitions:{colors["cyan2"]} {" | ".join(defs)}{colors["zero"]}')
-        print(f'{colors["gray2"]}Synonyms:{colors["purple2"]} {" | ".join(syns)}{colors["zero"]}')
         f.write('\n' + word + '\n')
-        for line in sys.stdin:
+        f.write('\n')
+        for line in all_lines:
+            line = line.replace(word, '_' * len(word))
             f.write(line)
     sys.exit(0)
 
