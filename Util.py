@@ -9,11 +9,12 @@ colors = {'zero': '\033[0m', 'green': '\x1B[32m', 'red': '\x1B[31m',
 
 
 def print_help():
-    print("""\
+    cmd_name = sys.argv[0]
+    print(f"""\
 Usage:
-    %s [TRAINING_OPTION] [WORDLIST_NAME]
+    {cmd_name} [TRAINING_OPTION] [WORDLIST_NAME]
 OR
-    %s [COMMAND] [WORDLIST_NAME]
+    {cmd_name} [COMMAND] [WORDLIST_NAME]
 
 If wordlist is required for the option, but not provided, then the most recent .wordlist file from ~/.zeng is used (works only for the last argument).
 
@@ -29,7 +30,7 @@ Training options:
     --tail <N>: adds last <N> words from wordlist to training set 
     --head <N>: adds first <N> words from wordlist to training set
     --range <X-Y>: adds words from X to Y to training set
-""" % sys.argv[0])
+""")
 #    -r: shuffle words from training pool
     sys.exit(0)
 
